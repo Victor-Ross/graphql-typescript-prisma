@@ -4,7 +4,7 @@ import { gql } from 'apollo-server';
 const typeDefs = gql `
 
   type User {
-    id: Int
+    id: String
     name: String,
     email: String,
     password: String
@@ -14,7 +14,7 @@ const typeDefs = gql `
   type Project {
     id: Int
     title: String,
-    active: Boolean!,
+    status: String,
     members: [User]
   }
 

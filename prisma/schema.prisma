@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model assignments {
+  id         Int      @default(autoincrement())
+  project_id Int
+  user_id    String   @db.Uuid
+  user_name  String?  @db.VarChar
+  project    projects @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users      users    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@id([project_id, user_id])
+}
+
+model projects {
+  id        Int           @id @default(autoincrement())
+  title     String?       @db.VarChar
+  status    String?       @db.VarChar
+  updatedAt DateTime      @updatedAt
+  createdAt DateTime      @default(now())
+  members   assignments[]
+}
+
+model users {
+  id        String        @id @db.Uuid
+  name      String?       @db.VarChar
+  email     String?       @unique @db.VarChar
+  password  String?       @db.VarChar
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  projects  assignments[]
+}
